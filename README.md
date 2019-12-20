@@ -1,5 +1,14 @@
 # Project blogsite
 
+### Requirements
+You will need to have:
+- Node.js
+- Docker
+
+To build and run the project with docker run:
+
+`docker-compose up -d`
+
 ## Available Scripts
 
 In the project directory to run the server and client concurrently:

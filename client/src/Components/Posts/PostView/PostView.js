@@ -22,13 +22,6 @@ export default class PostView extends Component {
     this.fetchPost();
   }
 
-  componentDidUpdate(){
-  }
-
-  componentWillUpdate(){
-    //this.fetchComments();
-  }
-
   fetchPost = async () => {
     let res = await postServices.getPost(this.props.match.params.id);
     this.setState({ 

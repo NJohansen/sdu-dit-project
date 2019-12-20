@@ -23,12 +23,19 @@ export default class PostView extends Component {
   }
 
   componentDidUpdate(){
-    this.fetchComments();
+  }
+
+  componentWillUpdate(){
+    //this.fetchComments();
   }
 
   fetchPost = async () => {
     let res = await postServices.getPost(this.props.match.params.id);
-    this.setState({ post: res });
+    this.setState({ 
+      post: res,
+      comments: res.comments 
+    });
+    console.log(res)
   };
 
   onAuthorInput = event => {
@@ -78,7 +85,7 @@ export default class PostView extends Component {
                     key={c.id}
                     id={c._id}
                     votes={c.vote}
-                    date={c.date}
+                    date={new Date(c.date).toDateString()}
                     author={c.author}
                     comment={c.comment}
                     post={this.state.post}
@@ -96,10 +103,11 @@ export default class PostView extends Component {
     if (this.state.post) {
       return (
         <PostCard
-          date={this.state.post.date}
+          date={new Date(this.state.post.createdAt).toDateString()}
           id={this.state.post._id}
           author={this.state.post.author}
           content={this.state.post.content}
+          commentsCount= {this.state.post.comments.length}
         ></PostCard>
       );
     } else {

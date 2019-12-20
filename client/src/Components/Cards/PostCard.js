@@ -31,7 +31,7 @@ const PostCard = props => {
             <div className="postDescription">{props.content}</div>
             <Link className="cardLink" key={ 'comment_' + props.id} to={`/post/${props.id}`}>
               <div className="cardFooter">
-                0
+                {props.commentsCount}
                 <div className="awesomeIcon">
                   <FontAwesomeIcon icon={faCommentAlt}></FontAwesomeIcon>
                 </div>

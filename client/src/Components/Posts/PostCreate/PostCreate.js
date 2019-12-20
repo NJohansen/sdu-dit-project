@@ -16,6 +16,26 @@ export default class PostCreate extends Component {
     this.setState({ content: event.target.value });
   };
 
+  newPost = async () => {
+    let mutationQuery = `
+    mutation createPost{
+      createPost(author: "${this.state.author}", content:"${this.state.content}"){
+        id,
+        content
+      }
+    }`;
+
+    await fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({query: mutationQuery})
+    })
+    .then(r => console.log(r.json()));
+  }
+
   onCreatePost = async () => {
     if (this.state.author.length < 1 || this.state.content.length < 1) {
       console.log("error msg");
@@ -26,8 +46,12 @@ export default class PostCreate extends Component {
         content: this.state.content
       }
 
-      await postServices.createPost(data);
+      //The graphql way
+      this.newPost();
+      // The REST way
+      //await postServices.createPost(data);
       this.setState({ author: "", content: "" });
+      window.location.href = "/PostList"
     }
   };
 

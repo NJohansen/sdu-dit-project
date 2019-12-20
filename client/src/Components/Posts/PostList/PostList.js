@@ -8,7 +8,8 @@ export default class PostList extends Component {
     super(props);
     this.state = {
       posts: [],
-      isLoading: false
+      isLoading: false,
+      newPosts: []
     };
   }
   componentDidMount() {
@@ -16,9 +17,32 @@ export default class PostList extends Component {
   }
 
   getPosts = async () => {
-    let res = await postServices.getPosts();
+    // The REST way
+    let resREST = await postServices.getPosts();
+    let getAllPostsQuery = `{
+      posts{
+        id,
+        createdAt,
+        author,
+        content,
+      }
+    }`;
 
-    this.setState({ posts: res });
+    let resGraphql = await fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({query: getAllPostsQuery})
+    }).then(r => r.json());
+
+    // The REST way
+    //this.setState({ posts: resREST });
+    
+    //Uses the response from Graphql
+    this.setState({ posts: resGraphql.data.posts });
+    console.log(resGraphql.data.posts);
   };
 
   renderContent = () => {
@@ -41,11 +65,11 @@ export default class PostList extends Component {
           <div className="postContainer">
             {this.state.posts.map(v => {
               return (
-                <div key={v._id}>
+                <div key={v.id}>
                   <PostCard
-                    key={v._id}
-                    id={v._id}
-                    date={new Date(v.createdAt).toDateString()}
+                    key={v.id}
+                    id={v.id}
+                    date={new Date(parseInt(v.createdAt)).toDateString()}
                     author={v.author}
                     content={v.content}
                   ></PostCard>
